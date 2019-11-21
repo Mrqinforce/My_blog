@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 
 /**
- * @ClassName $(Name)
+ * @ClassName ArticleDaoTest
  * @Description TODO
  * @Author Qin jian
  * @Date 2019/11/12
@@ -28,7 +28,8 @@ public class ArticleDaoTest {
                 logger.info("成功新增"+result.length+"个用户");
             }
         } catch (SQLException e) {
-            logger.error("异常");
+            e.printStackTrace();
+
 
 
 

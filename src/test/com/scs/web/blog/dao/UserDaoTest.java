@@ -32,9 +32,9 @@ public class UserDaoTest {
     public void insert(){
         try {
             UserDto userDto = new UserDto();
-            userDto.setMobile("13457513856");
-            userDto.setPassword("666666");
-            userDto.setNickname("苏玉溪");
+            userDto.setMobile("13739173619");
+            userDto.setPassword("11111111");
+            userDto.setNickname("qj");
             int result = userDao.insert(userDto);
             if (result == 1) {
                 logger.info("成功新增一名用户！");

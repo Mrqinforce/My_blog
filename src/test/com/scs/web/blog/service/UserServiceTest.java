@@ -17,7 +17,7 @@ public class UserServiceTest {
     private UserService userService = ServiceFactory.getUserServiceInstance();
     @Test
     public void signIn() {
-        UserDto userDao = new UserDto("13991045225","7549c9ceeb760cbbe96a0c2a0554bbac");
+        UserDto userDao = new UserDto("13989412100","5fc4967fe0a33825e951baf3881c3f39");
         Map<String,Object> map = userService.signIn(userDao);
         map = userService.signIn(userDao);
         System.out.println(map.get("msg"));
