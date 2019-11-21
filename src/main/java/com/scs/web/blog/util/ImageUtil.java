@@ -1,8 +1,6 @@
-package com.scs.web.blog.verify;
+package com.scs.web.blog.util;
 
 
-
-import com.scs.web.blog.util.StringUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -34,7 +32,7 @@ public class ImageUtil {
 
     public static void main(String[] args) throws IOException {
         String code= StringUtil.getRandomString(4);
-        BufferedImage img=ImageUtil.getImage(code,200,100);
+        BufferedImage img= ImageUtil.getImage(code,200,100);
         File file= new File("/Users/shahuhudexiaobinggan/Desktop/未命名文件夹/code.jpg");
         ImageIO.write(img,"jpg",file);
     }
