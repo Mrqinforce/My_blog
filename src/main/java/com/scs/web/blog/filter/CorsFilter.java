@@ -1,15 +1,18 @@
 package com.scs.web.blog.filter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 /**
+ * @author mq_xu
  * @ClassName CORSFilter
  * @Description 跨域过滤器
- * @Author Qin jian
- * @Date 2019/11/12
+ * @Date 2019/10/3
  * @Version 1.0
  **/
 @WebFilter(urlPatterns = "/*")
@@ -22,11 +25,13 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
+        //允许客户端请求头携带
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type,Access-Token,UId");
+        //允许给客户端响应头携带
+        response.setHeader("Access-Control-Expose-Headers", "Access-Token");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         chain.doFilter(req, res);
     }
-
 
     @Override
     public void init(FilterConfig filterConfig) {

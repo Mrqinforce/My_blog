@@ -1,47 +1,42 @@
 package com.scs.web.blog.dao;
-import com.scs.web.blog.domain.dto.UserDto;
+
 import com.scs.web.blog.entity.User;
 import com.scs.web.blog.factory.DaoFactory;
-import com.scs.web.blog.util.JSoupSpider;
+import com.scs.web.blog.util.SpiderUtil;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.sql.SQLException;
-/**
- * @ClassName $(Name)
- * @Description TODO
- * @Author Qin jian
- * @Date 2019/11/12
- * @Version 1.0
- **/
+import java.util.List;
+
 public class UserDaoTest {
-    private static Logger logger = LoggerFactory.getLogger(UserDaoTest.class);
     private UserDao userDao = DaoFactory.getUserDaoInstance();
+
     @Test
-    public void batchInsert() {
-        try {
-            int[] result = userDao.batchInsert(JSoupSpider.getUsers());
-            if(result.length !=0){
-                logger.info("成功新增"+result.length+"个用户");
-            }
-        } catch (SQLException e) {
-            logger.error("批量新增用户出现异常");
-        }
+    public void insert() throws SQLException {
+        User user = new User("13988887777","111");
+        userDao.insert(user);
     }
+
     @Test
-    public void insert(){
-        try {
-            UserDto userDto = new UserDto();
-            userDto.setMobile("13739173619");
-            userDto.setPassword("11111111");
-            userDto.setNickname("qj");
-            int result = userDao.insert(userDto);
-            if (result == 1) {
-                logger.info("成功新增一名用户！");
-            }
-        } catch (SQLException e) {
-            logger.error("新增一名用户失败！");
-        }
+    public void batchInsert() throws SQLException {
+        userDao.batchInsert(SpiderUtil.getUsers());
+    }
+
+    @Test
+    public void findUserByMobile() throws SQLException {
+        User user = userDao.findUserByMobile("13951905171");
+        System.out.println(user);
+    }
+
+    @Test
+    public void selectHotUsers() throws SQLException {
+        List<User> userList = userDao.selectHotUsers();
+        userList.forEach(System.out::println);
+    }
+
+    @Test
+    public void selectByKeywords() throws SQLException{
+        List<User> userList = userDao.selectByKeywords("王");
+        System.out.println(userList.size());
     }
 }
-

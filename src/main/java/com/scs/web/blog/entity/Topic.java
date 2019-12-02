@@ -1,23 +1,28 @@
 package com.scs.web.blog.entity;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 /**
- * @ClassName $(Name)
+ * @author mq_xu
+ * @ClassName Topic
  * @Description TODO
- * @Author Qin jian
- * @Date 2019/11/15
+ * @Date 23:56 2019/11/13
  * @Version 1.0
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Topic {
     private Long id;
-    //管理员id
     private Long adminId;
-   private String name;
+    private String topicName;
     private String logo;
     private String description;
+    private String homepage;
     private Integer articles;
     private Integer follows;
     private LocalDateTime createTime;

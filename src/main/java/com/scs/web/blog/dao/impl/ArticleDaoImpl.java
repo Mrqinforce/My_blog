@@ -1,10 +1,9 @@
 package com.scs.web.blog.dao.impl;
 
-
 import com.scs.web.blog.dao.ArticleDao;
 import com.scs.web.blog.domain.vo.ArticleVo;
 import com.scs.web.blog.entity.Article;
-import com.scs.web.blog.util.DataUtil;
+import com.scs.web.blog.util.BeanHandler;
 import com.scs.web.blog.util.DbUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,79 +12,162 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 /**
- * @ClassName $(Name)
- * @Description ArticleDaoImpl
- * @Author Qin jian
- * @Date 2019/11/12
+ * @author mq_xu
+ * @ClassName ArticleDaoImpl
+ * @Description 文章Dao接口实现类
+ * @Date 2019/11/10
  * @Version 1.0
  **/
 public class ArticleDaoImpl implements ArticleDao {
     private static Logger logger = LoggerFactory.getLogger(ArticleDaoImpl.class);
 
     @Override
-    public int[] batchInsert(List<Article> articleList) throws SQLException {
+    public void batchInsert(List<Article> articleList) throws SQLException {
         Connection connection = DbUtil.getConnection();
-        String sql = "INSERT INTO t_article (user_id,title,content,cover,diamond,comments,likes,publish_time) VALUES(?,?,?,?,?,?,?,?) ";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
         connection.setAutoCommit(false);
+        String sql = "INSERT INTO t_article (user_id,topic_id,title,summary,thumbnail,content,likes,comments,create_time) VALUES (?,?,?,?,?,?,?,?,?) ";
+        PreparedStatement pst = connection.prepareStatement(sql);
         articleList.forEach(article -> {
             try {
-                pstmt.setInt(1, DataUtil.getUserId());
-                pstmt.setString(2, article.getTitle());
-                pstmt.setString(3, article.getContent());
-                pstmt.setString(4, article.getCover());
-                pstmt.setInt(5, article.getDiamond());
-                pstmt.setInt(6, article.getComments());
-                pstmt.setInt(7, article.getLikes());
-                pstmt.setObject(8, article.getPublishTime());
-                pstmt.addBatch();
+                pst.setLong(1, article.getUserId());
+                pst.setLong(2, article.getTopicId());
+                pst.setString(3, article.getTitle());
+                pst.setString(4, article.getSummary());
+                pst.setString(5, article.getThumbnail());
+                pst.setString(6, article.getContent());
+                pst.setInt(7, article.getLikes());
+                pst.setInt(8, article.getComments());
+                pst.setObject(9, article.getCreateTime());
+                pst.addBatch();
             } catch (SQLException e) {
-                logger.error("批量导入文章信出错");
+                e.printStackTrace();
             }
         });
-        int[] result = pstmt.executeBatch();
+        pst.executeBatch();
         connection.commit();
-        DbUtil.close(null, pstmt, connection);
-        return result;
+        DbUtil.close(connection, pst);
+    }
+
+    @Override
+    public List<ArticleVo> selectHotArticles() throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        //从文章、专题、用户表联查出前端需要展示的数据
+        String sql = "SELECT a.id,a.user_id,a.topic_id,a.title,a.summary,a.thumbnail,a.comments,a.likes,a.create_time," +
+                "b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id " +
+                "ORDER BY a.comments DESC " +
+                "LIMIT 10 ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+        //调用封装的方法，将结果集解析成List
+        List<ArticleVo> articleVoList = BeanHandler.convertArticle(rs);
+        DbUtil.close(connection, pst, rs);
+        return articleVoList;
+    }
+
+    @Override
+    public List<ArticleVo> selectByPage(int currentPage, int count) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        String sql = "SELECT a.*,b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id  LIMIT ?,? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1, (currentPage - 1) * count);
+        pst.setInt(2, count);
+        ResultSet rs = pst.executeQuery();
+        List<ArticleVo> articleVos = BeanHandler.convertArticle(rs);
+        DbUtil.close(connection, pst, rs);
+        return articleVos;
     }
 
 
     @Override
-    public List<ArticleVo> selectHotArticles() throws SQLException {
-        List<ArticleVo> articleVoList = new ArrayList<>(20);
+    public List<ArticleVo> selectByKeywords(String keywords) throws SQLException {
         Connection connection = DbUtil.getConnection();
-        //在文章表和用户表联查，得到结视图对象
-        String sql = "SELECT a.id,a.user_id,a.title,a.content,a.diamond,a.comments,a.likes,b.id,b.nickname,b.avatar\n" +
-                "FROM t_article a\n" +
-                "LEFT JOIN t_user b\n" +
-                "ON a.user_id = b.id\n" +
-                "ORDER BY a.comments DESC LIMIT 20";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
-            ArticleVo article = new ArticleVo();
-            article.setId(rs.getLong("id"));
-            article.setUserId(rs.getLong("user_id"));
-            article.setTitle(rs.getString("title"));
-            article.setContent(rs.getString("content"));
-            article.setDiamond(rs.getString("diamond"));
-            article.setNickname(rs.getString("nickname"));
-            article.setAvatar(rs.getString("avatar"));
-            article.setLikes(rs.getInt("likes"));
-            article.setComments(rs.getInt("comments"));
-            articleVoList.add(article);
-        }
-        return articleVoList;
+        //从文章、专题、用户表联查出前端需要展示的数据
+        String sql = "SELECT a.*,b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id " +
+                "WHERE a.title LIKE ?  OR a.summary LIKE ? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, "%" + keywords + "%");
+        pst.setString(2, "%" + keywords + "%");
+        ResultSet rs = pst.executeQuery();
+        List<ArticleVo> articleVos = BeanHandler.convertArticle(rs);
+        DbUtil.close(connection, pst, rs);
+        return articleVos;
     }
 
+    @Override
+    public List<ArticleVo> selectByTopicId(long topicId) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        //从文章、专题、用户表联查出前端需要展示的数据
+        String sql = "SELECT a.*,b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id " +
+                "WHERE a.topic_id = ? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1, topicId);
+        ResultSet rs = pst.executeQuery();
+        List<ArticleVo> articleVos = BeanHandler.convertArticle(rs);
+        DbUtil.close(connection, pst, rs);
+        return articleVos;
+    }
 
+    @Override
+    public List<ArticleVo> selectByUserId(long userId) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        //从文章、专题、用户表联查出前端需要展示的数据
+        String sql = "SELECT a.*,b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id " +
+                "WHERE a.topic_id = ? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1, userId);
+        ResultSet rs = pst.executeQuery();
+        List<ArticleVo> articleVos = BeanHandler.convertArticle(rs);
+        DbUtil.close(connection, pst, rs);
+        return articleVos;
+    }
+
+    @Override
+    public ArticleVo getArticle(long id) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        String sql = "SELECT a.*,b.topic_name,b.logo,c.nickname,c.avatar " +
+                "FROM t_article a " +
+                "LEFT JOIN t_topic b " +
+                "ON a.topic_id = b.id " +
+                "LEFT JOIN t_user c " +
+                "ON a.user_id = c.id " +
+                "WHERE a.id = ?  ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1, id);
+        ResultSet rs = pst.executeQuery();
+        ArticleVo articleVo = BeanHandler.convertArticle(rs).get(0);
+        //注意这里，上一步执行完毕后，结果集的指针已经在当前这行记录的下方，所以回退一下
+        rs.previous();
+        //列表页的文章数据一般不需要详细内容，但是文章详情页需要，所以补上content属性
+        articleVo.getArticle().setContent(rs.getString("content"));
+        DbUtil.close(connection, pst, rs);
+        return articleVo;
+    }
 }
-
-
-
-
-

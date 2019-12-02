@@ -1,38 +1,43 @@
 package com.scs.web.blog.dao;
 
-
+import com.scs.web.blog.domain.vo.ArticleVo;
 import com.scs.web.blog.factory.DaoFactory;
-import com.scs.web.blog.util.JSoupSpider;
+import com.scs.web.blog.util.SpiderUtil;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.List;
 
-
-/**
- * @ClassName ArticleDaoTest
- * @Description TODO
- * @Author Qin jian
- * @Date 2019/11/12
- * @Version 1.0
- **/
 public class ArticleDaoTest {
-    private static Logger logger = LoggerFactory.getLogger(ArticleDaoTest.class);
+
     private ArticleDao articleDao = DaoFactory.getArticleDaoInstance();
+
     @Test
-    public void batchInsert() {
-        try {
-            int[] result = articleDao.batchInsert(JSoupSpider.getArticle());
-            if(result.length !=0){
-                logger.info("成功新增"+result.length+"个用户");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void batchInsert() throws SQLException {
+        articleDao.batchInsert(SpiderUtil.getArticles());
+    }
 
+    @Test
+    public void selectHotArticles() throws SQLException {
+        List<ArticleVo> articleVoList = articleDao.selectHotArticles();
+        System.out.println(articleVoList.size());
+    }
 
+    @Test
+    public void getArticle() throws SQLException {
+        ArticleVo article = articleDao.getArticle(1);
+        System.out.println(article);
+    }
 
+    @Test
+    public void selectByKeywords() throws SQLException {
+        List<ArticleVo> articleVoList = articleDao.selectByKeywords("微");
+        System.out.println(articleVoList.size());
+    }
 
-        }
+    @Test
+    public void selectByPage() throws SQLException {
+        List<ArticleVo> articleVoList = articleDao.selectByPage(1, 10);
+        articleVoList.forEach(System.out::println);
     }
 }

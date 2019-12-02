@@ -1,16 +1,22 @@
 package com.scs.web.blog.entity;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
+ * @author mq_xu
  * @ClassName User
  * @Description 用户实体类
- * @Author Qin jian
- * @Date 2019/11/12
+ * @Date 9:47 2019/11/9
  * @Version 1.0
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private Long id;
     private String mobile;
@@ -21,15 +27,17 @@ public class User {
     private LocalDate birthday;
     private String address;
     private String introduction;
-    //个人中心背景图
     private String banner;
-    //邮箱
     private String email;
-    //主页
     private String homepage;
-    private Short follows;
-    private Short fans;
-    private Short articles;
+    private Integer follows;
+    private Integer fans;
+    private Integer articles;
     private LocalDateTime createTime;
     private Short status;
+
+    public User(String mobile, String password) {
+        this.mobile = mobile;
+        this.password = password;
+    }
 }

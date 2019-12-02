@@ -1,12 +1,14 @@
 package com.scs.web.blog.util;
+
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Random;
+
 /**
+ * @author mq_xu
  * @ClassName StringUtil
  * @Description 字符串工具类
- * @Author Qin jian
- * @Date 2019/11/15
+ * @Date 2019/11/14
  * @Version 1.0
  **/
 public class StringUtil {
@@ -28,72 +30,48 @@ public class StringUtil {
         }
         return result;
     }
-        //    public static void main(String[] args) {
-//        String str="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//        StringBuilder sb=new StringBuilder(6);
-//        for(int i=0;i<6;i++)
-//        {
-//            char ch=str.charAt(new Random().nextInt(str.length()));
-//            sb.append(ch);
-//        }
-//        System.out.println(sb.toString());
-//
-//
-//    }
-//    public static void main(String[] args) {
-//        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//        StringBuilder sb=new StringBuilder(4);
-//        for(int i=0;i<4;i++)
-//        {
-//            char ch=str.charAt(new Random().nextInt(str.length()));
-//            sb.append(ch);
-//        }
-//        System.out.println(sb.toString());
-//
-//
-//
-//        //随机生成六位数字
-//        System.out.println((int)((Math.random()*9+1)*100000));
-//        //随机生成五位数字
-//        System.out.println((int)((Math.random()*9+1)*10000));
-//
-//
-//    }
-//
-        public static String getRandomString(int length) {
-            Random random = new Random();
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < length; i++) {
-                int number = random.nextInt(3);
-                long result = 0;
-                switch (number) {
-                    case 0:
-                        result = Math.round(Math.random() * 25 + 65);
-                        sb.append(String.valueOf((char) result));
-                        break;
-                    case 1:
-                        result = Math.round(Math.random() * 25 + 97);
-                        sb.append(String.valueOf((char) result));
-                        break;
-                    case 2:
-                        sb.append(String.valueOf(new Random().nextInt(10)));
-                        break;
-                }
 
-            }
-            return sb.toString();
+    private final static int MAX = 4;
+
+    public static String getRandomString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+        int index;
+        //生成四位随机字符
+        for (int i = 0; i < MAX; i++) {
+            //随机生成0、1、2三个整数，代表数字字符、大写字母、小写字母，保证验证码的组成比较正态随机
+            index = random.nextInt(3);
+            //调用本类封装的私有方法，根据编号获得对应的字符
+            char result = getChar(index);
+            //追加到可变长字符串
+            stringBuilder.append(result);
         }
-
-        public static void main(String[] args) {
-            System.out.println(StringUtil.getRandomString(6));
-            Pattern p = Pattern.compile("\\d{2,}");//这个2是指连续数字的最少个数
-            String u = "收录了 27093 篇文章，35936 人关注";
-            Matcher m = p.matcher(u);
-            int i = 0;
-            while (m.find()) {
-                System.out.println(m.group());
-                i++;
-            }
-        }
-
+        return stringBuilder.toString();
     }
+
+    private static char getChar(int item) {
+        //数字字符范围
+        int digitalBound = 10;
+        //字符范围
+        int charBound = 26;
+        Random random = new Random();
+        int index;
+        char c;
+        //根据调用时候的三个选项，生成数字、大写字母、小写字母三种不同的字符
+        if (item == 0) {
+            index = random.nextInt(digitalBound);
+            c = (char) ('0' + index);
+        } else if (item == 1) {
+            index = random.nextInt(charBound);
+            c = (char) ('A' + index);
+        } else {
+            index = random.nextInt(charBound);
+            c = (char) ('a' + index);
+        }
+        return c;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(StringUtil.getRandomString());
+    }
+}

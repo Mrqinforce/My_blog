@@ -2,11 +2,12 @@ package com.scs.web.blog.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
+ * @author mq_xu
  * @ClassName StingUtil
  * @Description 使用一个枚举全局管理API状态码，这对线上环境定位错误问题和后续接口文档的维护都是很有帮助
- * @Author Qin jian
- * @Date 2019/11/18
+ * @Date 11:30 2019/11/9
  * @Version 1.0
  **/
 public enum ResultCode {
@@ -23,9 +24,11 @@ public enum ResultCode {
     USER_NOT_SIGN_IN(20001, "用户未登录"),
     USER_PASSWORD_ERROR(20002, "密码错误"),
     USER_ACCOUNT_ERROR(20003, "账号错误"),
-    USER_ACCOUNT_FORBIDDEN(20004, "账号已被禁用"),
-    USER_NOT_EXIST(20005, "用户不存在"),
-    USER_HAS_EXISTED(20006, "用户已存在"),
+    USER_VERIFY_CODE_ERROR(20004, "验证码错误"),
+    USER_ACCOUNT_FORBIDDEN(20005, "账号已被禁用"),
+    USER_NOT_EXIST(20006, "用户不存在"),
+    USER_HAS_EXISTED(20007, "用户已存在"),
+    USER_SIGN_UP_FAIL(2008,"用户注册失败"),
 
     /* 业务错误：30001-39999 */
     SPECIFIED_QUESTIONED_USER_NOT_EXIST(30001, "某业务出现问题"),
