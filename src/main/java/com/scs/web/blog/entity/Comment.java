@@ -19,6 +19,7 @@ public class Comment {
     private Long id;
     private Long userId;
     private Long articleId;
+    private String nickname;
     private String content;
     private LocalDateTime createTime;
 }
