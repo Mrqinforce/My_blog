@@ -1,9 +1,12 @@
 package com.scs.web.blog.service;
 
 import com.scs.web.blog.domain.dto.CommentDto;
+import com.scs.web.blog.entity.Comment;
+import com.scs.web.blog.util.Result;
 
-import javax.xml.stream.events.Comment;
+import java.util.List;
 import java.util.Map;
+
 
 /**
  * @ClassName CommentService
@@ -19,4 +22,17 @@ public interface CommentService {
      * @return
      */
     Map<String,Object> newcomment(CommentDto commentDto);
+
+    /**
+     *
+     * @return
+     */
+    List<Comment> listComment();
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Result getComment(long id);
 }

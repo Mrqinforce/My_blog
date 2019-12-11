@@ -21,7 +21,7 @@ public class CommentDaoTest {
     @Test
     public void insert() throws SQLException {
         CommentDto commentDto = new CommentDto();
-        commentDto.setNickname("qin");
+        commentDto.setNickname("jian");
         commentDto.setContent("yes");
         int result = commentDao.insert(commentDto);
         if(result == 1) {

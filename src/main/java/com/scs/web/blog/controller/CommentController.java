@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,11 +32,48 @@ import java.util.Map;
  * @Date 2019/12/10
  * @Version 1.0
  **/
-@WebServlet(urlPatterns = {"/api/comment","/api/comment/*"})
+@WebServlet(urlPatterns = {"/api/comment","/api/comment/*","/api/comments"})
 public class CommentController extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(CommentController.class);
     private CommentDao commentDao = DaoFactory.getCommentDaoInstance();
     private CommentService commentService = ServiceFactory.getCommentServiceInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String uri = req.getRequestURI().trim();
+        System.out.println(uri);
+        if(uri.contains("/api/comments")){
+            listComment(req, resp);
+        }else if(uri.contains("/api/comment")){
+            getComment(req, resp);
+        }
+
+    }
+
+
+
+    private void listComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Comment> comments = commentService.listComment();
+        Gson gson = new Gson();
+        resp.setContentType("application/json;charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        PrintWriter out = resp.getWriter();
+        ResponseObject ro = null;
+        ro = ResponseObject.success(resp.getStatus(), resp.getStatus() == 200 ? "成功" : "失败", comments);
+        out.print(gson.toJson(ro));
+        out.close();
+    }
+    private void getComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String info = req.getPathInfo().trim();
+        String id = info.substring(info.indexOf("/") + 1);
+        Result result = commentService.getComment(Long.parseLong(id));
+        Gson gson = new GsonBuilder().create();
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(result));
+        out.close();
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

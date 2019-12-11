@@ -37,6 +37,7 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //去掉了地址共同的前缀，对不同的部分进行分发
         String uri = req.getRequestURI().trim();
         if (UrlPatten.USER.equals(uri)) {
             String page = req.getParameter("page");
