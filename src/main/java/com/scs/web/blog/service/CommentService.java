@@ -1,11 +1,7 @@
 package com.scs.web.blog.service;
 
-import com.scs.web.blog.domain.dto.CommentDto;
 import com.scs.web.blog.entity.Comment;
 import com.scs.web.blog.util.Result;
-
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -17,22 +13,16 @@ import java.util.Map;
  **/
 public interface CommentService {
     /**
-     * 新评论
-     * @param commentDto
+     * 写评论
+     * @param comment
      * @return
      */
-    Map<String,Object> newcomment(CommentDto commentDto);
+    Result writeComment(Comment comment);
 
     /**
-     *
+     * 查看文章所有评论
+     * @param articleId
      * @return
      */
-    List<Comment> listComment();
-
-    /**
-     *
-     * @param id
-     * @return
-     */
-    Result getComment(long id);
+    Result showComment(long articleId);
 }

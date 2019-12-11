@@ -1,9 +1,6 @@
 package com.scs.web.blog.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 /**
@@ -13,13 +10,11 @@ import java.time.LocalDateTime;
  * @Date 2019/11/29
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Comment {
-    private Long id;
-    private Long userId;
-    private Long articleId;
-    private String nickname;
+    private long id;
+    private long userId;
+    private long articleId;
     private String content;
     private LocalDateTime createTime;
+
 }

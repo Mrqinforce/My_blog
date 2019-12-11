@@ -101,6 +101,15 @@ public class UserController extends HttpServlet {
 
 
     private void signUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("注册");
+        String requestBody = HttpUtil.getRequestBody(req);
+        logger.info("注册用户信息：" + requestBody);
+        Gson gson = new GsonBuilder().create();
+        UserDto userDto = gson.fromJson(requestBody, UserDto.class);
+        String sessionId = req.getHeader("Access-Token");
+        MySessionContext myc = MySessionContext.getInstance();
+        HttpSession session = myc.getSession(sessionId);
+        HttpUtil.getResponseBody(resp, userService.signIn(userDto));
+
+
     }
 }

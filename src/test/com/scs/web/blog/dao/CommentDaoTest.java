@@ -1,12 +1,13 @@
 package com.scs.web.blog.dao;
 
-import com.scs.web.blog.domain.dto.CommentDto;
+import com.scs.web.blog.entity.Comment;
 import com.scs.web.blog.factory.DaoFactory;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+
+import static org.junit.Assert.*;
 
 /**
  * @ClassNameCommentDaotest
@@ -16,18 +17,21 @@ import java.sql.SQLException;
  * @Version 1.0
  **/
 public class CommentDaoTest {
-    private  static Logger logger = LoggerFactory.getLogger(CommentDaoTest.class);
+
     private CommentDao commentDao = DaoFactory.getCommentDaoInstance();
     @Test
-    public void insert() throws SQLException {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setNickname("jian");
-        commentDto.setContent("yes");
-        int result = commentDao.insert(commentDto);
-        if(result == 1) {
-            logger.info("成功");
-        }else {
-            logger.error("失败");
+    public void insert() {
+        int n = 0;
+        Comment comment = new Comment();
+        comment.setUserId(11);
+        comment.setArticleId(31);
+        comment.setContent("nonono");
+        comment.setCreateTime(LocalDateTime.now());
+        try {
+            n = commentDao.insert(comment);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        System.out.println(n);
     }
 }
