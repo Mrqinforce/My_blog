@@ -25,7 +25,7 @@ import java.io.PrintWriter;
  * @Date 2019/12/10
  * @Version 1.0
  **/
-@WebServlet(urlPatterns = "/api/comment")
+@WebServlet(urlPatterns = {"/api/comment","/api/comments/delete/*"})
 public class CommentController extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(CommentController.class);
     private CommentService commentService = ServiceFactory.getCommentServiceInstance();
@@ -52,6 +52,24 @@ public class CommentController extends HttpServlet {
         Gson gson = new GsonBuilder().create();
         Comment comment = gson.fromJson(stringBuilder.toString(), Comment.class);
         Result result = commentService.writeComment(comment);
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(result));
+        out.close();
+    }
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI().trim();
+        System.out.println(uri);
+        if(uri.contains("/api/comments/delete"))
+            deleteComment(req, resp);
+    }
+
+    private void deleteComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String info = req.getPathInfo().trim();
+        String id = info.substring(info.indexOf("/") + 1);
+//        String id = req.getParameter("id");
+        Result result = commentService.deleteComment(Long.parseLong(id));
+        Gson gson = new GsonBuilder().create();
         PrintWriter out = resp.getWriter();
         out.print(gson.toJson(result));
         out.close();

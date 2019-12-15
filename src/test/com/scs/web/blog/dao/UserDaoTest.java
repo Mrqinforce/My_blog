@@ -6,6 +6,8 @@ import com.scs.web.blog.util.SpiderUtil;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class UserDaoTest {
@@ -38,5 +40,24 @@ public class UserDaoTest {
     public void selectByKeywords() throws SQLException{
         List<User> userList = userDao.selectByKeywords("王");
         System.out.println(userList.size());
+    }
+    @Test
+    public void alterUser() {
+        User user = new User();
+        user.setNickname("qin");
+        user.setGender("男");
+        LocalDate localDate = LocalDate.parse("2019-12-13", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        user.setBirthday(localDate);
+        user.setAddress("地址");
+        user.setIntroduction("1293340422");
+        user.setEmail("1293340422@qq.com");
+        user.setId(23l);
+        boolean b = false;
+        try {
+            b = userDao.alterUser(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(b);
     }
 }

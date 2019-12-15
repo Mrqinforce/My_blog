@@ -25,4 +25,10 @@ public interface CommentService {
      * @return
      */
     Result showComment(long articleId);
+    /**
+     * 删评论
+     * @param id
+     * @return
+     */
+    Result deleteComment(long id);
 }

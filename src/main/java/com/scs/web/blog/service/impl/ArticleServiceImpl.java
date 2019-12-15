@@ -2,6 +2,7 @@ package com.scs.web.blog.service.impl;
 
 import com.scs.web.blog.dao.ArticleDao;
 import com.scs.web.blog.domain.vo.ArticleVo;
+import com.scs.web.blog.entity.Article;
 import com.scs.web.blog.factory.DaoFactory;
 import com.scs.web.blog.service.ArticleService;
 import com.scs.web.blog.util.Result;
@@ -81,5 +82,20 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             return Result.failure(ResultCode.RESULT_CODE_DATA_NONE);
         }
+    }
+
+    @Override
+    public Result writeArticle(Article article) {
+        boolean b = false;
+        try {
+            b = articleDao.insert(article);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (b) {
+            return Result.success();
+        }
+        return Result.failure(ResultCode.DATA_IS_WRONG);
+
     }
 }

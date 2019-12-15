@@ -3,6 +3,7 @@ package com.scs.web.blog.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.scs.web.blog.domain.dto.UserDto;
+import com.scs.web.blog.entity.User;
 import com.scs.web.blog.factory.ServiceFactory;
 import com.scs.web.blog.listener.MySessionContext;
 import com.scs.web.blog.service.UserService;
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author mq_xu
@@ -108,8 +111,41 @@ public class UserController extends HttpServlet {
         String sessionId = req.getHeader("Access-Token");
         MySessionContext myc = MySessionContext.getInstance();
         HttpSession session = myc.getSession(sessionId);
-        HttpUtil.getResponseBody(resp, userService.signIn(userDto));
-
-
+        HttpUtil.getResponseBody(resp, userService.signUp(userDto));
     }
+    private void getUsersByPage(HttpServletResponse resp, int page, int count) throws IOException {
+        Gson gson = new GsonBuilder().create();
+        Result result = userService.selectByPage(page, count);
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(result));
+        out.close();
+    }
+
+    private void getUsersByKeywords(HttpServletResponse resp, String keywords) throws IOException {
+        Gson gson = new GsonBuilder().create();
+        Result result = userService.selectByKeywords(keywords);
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(result));
+        out.close();
+    }
+
+    private void alterUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BufferedReader reader = req.getReader();
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        Gson gson = new GsonBuilder().create();
+        User user = gson.fromJson(stringBuilder.toString(), User.class);
+        Result result = userService.alterUser(user);
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(result));
+        out.close();
+    }
+    @Override
+    public void init() throws ServletException {
+        logger.info("UserController初始化");
+    }
+
 }

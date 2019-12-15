@@ -73,5 +73,13 @@ public interface UserDao {
      * @throws SQLException
      */
     List<User> selectByKeywords(String keywords) throws SQLException;
+    /**
+     * 修改用户信息·
+     * @param user
+     * @return
+     * @throws SQLException
+     */
+    boolean alterUser(User user) throws SQLException;
+
 
 }

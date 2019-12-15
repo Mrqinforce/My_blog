@@ -170,4 +170,25 @@ public class ArticleDaoImpl implements ArticleDao {
         DbUtil.close(connection, pst, rs);
         return articleVo;
     }
+
+    @Override
+    public boolean insert(Article article) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        String sql = "INSERT INTO t_article (user_id,topic_id,title,summary,thumbnail,content,likes,comments,create_time) VALUES (?,?,?,?,?,?,?,?,?) ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1, article.getUserId());
+        pst.setLong(2, article.getTopicId());
+        pst.setString(3, article.getTitle());
+        pst.setString(4, article.getSummary());
+        pst.setString(5, article.getThumbnail());
+        pst.setString(6, article.getContent());
+        pst.setInt(7, article.getLikes());
+        pst.setInt(8, article.getComments());
+        pst.setObject(9, article.getCreateTime());
+        int i = pst.executeUpdate();
+        if (i ==1) {
+            return true;
+        }
+        return false;
+    }
 }
