@@ -74,6 +74,9 @@ public class UserController extends HttpServlet {
                 String mobile = req.getParameter("mobile");
                 HttpUtil.getResponseBody(resp, userService.checkMobile(mobile));
                 break;
+            case UrlPatten.USER_ALTER:
+                alterUser(req,resp);
+                break;
             default:
         }
     }

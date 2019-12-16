@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * @ClassName CommentSerive
+ * @ClassName CommentService
  * @Description TODO
  * @Author Qin jian
  * @Date 2019/12/10

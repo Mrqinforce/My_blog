@@ -12,7 +12,7 @@ import com.scs.web.blog.util.Result;
 public interface TopicService {
     /**
      * 获取热门专题
-     * @param id
+     * @param
      * @return
      */
     Result getHotTopics();

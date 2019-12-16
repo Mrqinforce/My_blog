@@ -37,9 +37,9 @@ public class CommentDaoImpl implements CommentDao {
     public List<CommentVo> getCommments(long articleId) throws SQLException {
         Connection connection = DbUtil.getConnection();
         String sql = "SELECT a.*,b.avatar,b.nickname FROM t_comment a LEFT JOIN t_user b ON a.user_id = b.id WHERE a.article_id=?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, articleId);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setLong(1, articleId);
+        ResultSet resultSet = pstmt.executeQuery();
 
         CommentVo commentVo = null;
         List<CommentVo> commentVoList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class CommentDaoImpl implements CommentDao {
             commentVo.setComment(comment);
             commentVoList.add(commentVo);
         }
-        DbUtil.close(connection, preparedStatement, resultSet);
+        DbUtil.close(connection, pstmt, resultSet);
         return commentVoList;
     }
 
