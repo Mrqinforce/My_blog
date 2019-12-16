@@ -4,6 +4,7 @@ import com.scs.web.blog.dao.UserDao;
 import com.scs.web.blog.domain.vo.UserVo;
 import com.scs.web.blog.entity.User;
 import com.scs.web.blog.util.BeanHandler;
+import com.scs.web.blog.util.DataUtil;
 import com.scs.web.blog.util.DbUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) throws SQLException {
         Connection connection = DbUtil.getConnection();
-        String sql = "INSERT INTO t_user (mobile,password) VALUES (?,?) ";
+        String sql = "INSERT INTO t_user (mobile,password,birthday) VALUES (?,?,?) ";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, user.getMobile());
         pst.setString(2, user.getPassword());
+        pst.setObject(3, DataUtil.getBirthday());
         pst.executeUpdate();
         DbUtil.close(connection, pst);
     }
@@ -142,7 +144,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, user.getNickname());
         pst.setString(2, user.getGender());
-        pst.setObject(3, user.getBirthday());
+        pst.setObject(3, DataUtil.getBirthday());
         pst.setString(4, user.getAddress());
         pst.setString(5, user.getIntroduction());
         pst.setString(6, user.getEmail());
