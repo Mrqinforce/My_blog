@@ -6,13 +6,12 @@ import com.scs.web.blog.entity.User;
 import com.scs.web.blog.util.BeanHandler;
 import com.scs.web.blog.util.DataUtil;
 import com.scs.web.blog.util.DbUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,11 +27,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) throws SQLException {
         Connection connection = DbUtil.getConnection();
-        String sql = "INSERT INTO t_user (mobile,password,birthday) VALUES (?,?,?) ";
+        String sql = "INSERT INTO t_user (mobile,password,birthday,create_time) VALUES (?,?,?,?) ";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, user.getMobile());
-        pst.setString(2, user.getPassword());
+        pst.setString(2, DigestUtils.md5Hex(user.getPassword()));
         pst.setObject(3, DataUtil.getBirthday());
+        pst.setObject(4, Timestamp.valueOf(LocalDateTime.now()));
         pst.executeUpdate();
         DbUtil.close(connection, pst);
     }
@@ -54,7 +54,7 @@ public class UserDaoImpl implements UserDao {
                 pst.setString(7, user.getAddress());
                 pst.setString(8, user.getIntroduction());
                 pst.setString(9, user.getBanner());
-                pst.setString(10, user.getHomepage());
+                pst.setString(10,user.getHomepage());
                 pst.setInt(11, 0);
                 pst.setInt(12, 0);
                 pst.setInt(13, 0);

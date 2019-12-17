@@ -80,10 +80,17 @@ public interface ArticleDao {
     ArticleVo getArticle(long id) throws SQLException;
 
     /**
-     * 插入一条文章
+     * 插入一篇文章
      * @param article
      * @return
      * @throws SQLException
      */
     boolean insert(Article article) throws SQLException;
+    /**
+     *删除一篇文章
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    int delete(long id) throws  SQLException;
 }

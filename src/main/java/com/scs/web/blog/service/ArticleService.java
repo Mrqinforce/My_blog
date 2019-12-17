@@ -50,4 +50,10 @@ public interface ArticleService {
      * @return
      */
     Result writeArticle(Article article);
+    /**
+     *删除文章
+     * @param id
+     * @return
+     */
+    Result deleteArticle(long id);
 }

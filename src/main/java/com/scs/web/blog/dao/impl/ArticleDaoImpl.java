@@ -8,10 +8,8 @@ import com.scs.web.blog.util.DbUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -184,11 +182,22 @@ public class ArticleDaoImpl implements ArticleDao {
         pst.setString(6, article.getContent());
         pst.setInt(7, article.getLikes());
         pst.setInt(8, article.getComments());
-        pst.setObject(9, article.getCreateTime());
+        pst.setObject(9, Timestamp.valueOf(LocalDateTime.now()));
         int i = pst.executeUpdate();
         if (i ==1) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int delete(long id) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        String sql = "DELETE FROM t_article WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1,id);
+        int i = pst.executeUpdate();
+        System.out.println("行数为" + i);
+        return i;
     }
 }
