@@ -31,7 +31,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, user.getMobile());
         pst.setString(2, DigestUtils.md5Hex(user.getPassword()));
-        pst.setObject(3, DataUtil.getBirthday());
+        pst.setObject(3, user.getBirthday());
         pst.setObject(4, Timestamp.valueOf(LocalDateTime.now()));
         pst.executeUpdate();
         DbUtil.close(connection, pst);

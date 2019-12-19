@@ -1,5 +1,7 @@
 package com.scs.web.blog.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.scs.web.blog.domain.dto.UserDto;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author mq_xu
@@ -139,11 +143,19 @@ public class UserController extends HttpServlet {
         while ((line = reader.readLine()) != null) {
             stringBuilder.append(line);
         }
-        Gson gson = new GsonBuilder().create();
-        User user = gson.fromJson(stringBuilder.toString(), User.class);
+        System.out.println(stringBuilder.toString());
+        String jsonStr = stringBuilder.toString();
+
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        User user = JSONObject.parseObject(jsonStr,User.class);
+        String dateString = jsonObject.get("birthday").toString();
+        LocalDate localDate =  LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        user.setBirthday(localDate);
+
         Result result = userService.alterUser(user);
+        System.out.println(result);
         PrintWriter out = resp.getWriter();
-        out.print(gson.toJson(result));
+        out.print(JSONObject.parseObject(JSON.toJSONString(user)));
         out.close();
     }
     @Override
