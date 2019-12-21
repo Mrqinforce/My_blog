@@ -80,6 +80,11 @@ public interface UserDao {
      * @throws SQLException
      */
     boolean alterUser(User user) throws SQLException;
-
+    /**
+     *修改用户头像
+     * @param user
+     * @throws SQLException
+     */
+    void updateavatar(User user) throws SQLException;
 
 }

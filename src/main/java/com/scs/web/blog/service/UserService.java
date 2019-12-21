@@ -69,4 +69,10 @@ public interface UserService {
      * @return
      */
     Result alterUser(User user);
+    /**
+     * 修改头像
+     * @param user
+     * @return
+     */
+    Result update(User user);
 }

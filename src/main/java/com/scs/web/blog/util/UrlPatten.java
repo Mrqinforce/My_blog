@@ -22,4 +22,5 @@ public class UrlPatten {
     public static final String WEATHER = "/api/weather";
 
 
+    public static final String USER_UPDATE ="/api/user/update" ;
 }

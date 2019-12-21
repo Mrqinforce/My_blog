@@ -81,6 +81,9 @@ public class UserController extends HttpServlet {
             case UrlPatten.USER_ALTER:
                 alterUser(req,resp);
                 break;
+            case UrlPatten.USER_UPDATE:
+                updateAvatar(req, resp);
+                break;
             default:
         }
     }
@@ -157,6 +160,23 @@ public class UserController extends HttpServlet {
         PrintWriter out = resp.getWriter();
         out.print(JSONObject.parseObject(JSON.toJSONString(user)));
         out.close();
+    }
+    private void updateAvatar(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+//        Gson gson = new GsonBuilder().create();
+        String mobile = req.getParameter("mobile");
+        String avatar = req.getParameter("avatar");
+        System.out.println(mobile);
+        System.out.println(avatar);
+        User user = new User();
+        user.setMobile(mobile);
+        user.setAvatar(avatar);
+        Result result = userService.update(user);
+        System.out.println(result);
+//        PrintWriter out = resp.getWriter();
+//        out.print(gson.toJson(result));
+//        out.close();
+        HttpUtil.getResponseBody(resp,result);
     }
     @Override
     public void init() throws ServletException {

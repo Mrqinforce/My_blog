@@ -60,4 +60,10 @@ public class UserDaoTest {
         }
         System.out.println(b);
     }
+    @Test
+    public void update()throws SQLException {
+        User user = userDao.findUserByMobile("12567854674");
+        user.setAvatar("111");
+        userDao.updateavatar(user);
+    }
 }

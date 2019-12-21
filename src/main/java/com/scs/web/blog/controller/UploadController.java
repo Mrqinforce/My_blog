@@ -1,5 +1,9 @@
 package com.scs.web.blog.controller;
 
+import com.scs.web.blog.util.AliOssUtil;
+import com.scs.web.blog.util.HttpUtil;
+import com.scs.web.blog.util.Result;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -7,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -20,17 +25,17 @@ import java.io.IOException;
 public class UploadController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Part part = req.getPart("filename");
+        Part part = req.getPart("file");
+        //取得客户端提交的文件名
         String name = part.getSubmittedFileName();
-        System.out.println(name);
+        System.out.println("name");
         String path = req.getSession().getServletContext().getRealPath("");
         System.out.println(path);
-        //f:\\blog\\target\\blog\\1.jpg
         part.write(path + name);
         System.out.println(path + name);
-        resp.setContentType("image/jpg");
-        req.setAttribute("msg", "上传成功！");
-        req.setAttribute("url", "http://localhost:8080/" + name);
-        req.getRequestDispatcher("/upload.jsp").forward(req, resp);
+        File file = new File(path + name);
+        String url = AliOssUtil.upload(file);
+        System.out.println(url);
+        HttpUtil.getResponseBody(resp, Result.success(url));
     }
 }

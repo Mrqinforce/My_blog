@@ -37,6 +37,7 @@ public enum ResultCode {
     SYSTEM_INNER_ERROR(40001, "系统繁忙，请稍后重试"),
 
     /* 数据错误：50001-599999 */
+    DATABASE_ERROR(50000,"数据库操作异常"),
     RESULT_CODE_DATA_NONE(50001, "数据未找到"),
     DATA_IS_WRONG(50002, "数据有误"),
     DATA_ALREADY_EXISTED(50003, "数据已存在"),

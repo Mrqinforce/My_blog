@@ -155,4 +155,13 @@ public class UserDaoImpl implements UserDao {
         }
         return false;
     }
+    @Override
+    public void updateavatar(User user) throws SQLException {
+        Connection connection = DbUtil.getConnection();
+        String sql = "UPDATE t_user SET avatar=? WHERE mobile = ? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,user.getAvatar());
+        pst.setString(2,user.getMobile());
+        pst.executeUpdate();
+    }
 }
