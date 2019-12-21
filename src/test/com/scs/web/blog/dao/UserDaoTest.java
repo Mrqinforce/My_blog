@@ -66,4 +66,16 @@ public class UserDaoTest {
         user.setAvatar("111");
         userDao.updateavatar(user);
     }
+    @Test
+    public void updatearticle() throws SQLException{
+        int result = userDao.updatearticle(1l);
+        System.out.println(result);
+    }
+    @Test
+    public void updatee() throws SQLException{
+        User user = userDao.getUserr(1);
+        user.setArticles((user.getArticles()));
+        userDao.updatee(user);
+    }
+
 }

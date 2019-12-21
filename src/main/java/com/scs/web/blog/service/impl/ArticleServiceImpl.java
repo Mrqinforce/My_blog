@@ -1,8 +1,10 @@
 package com.scs.web.blog.service.impl;
 
 import com.scs.web.blog.dao.ArticleDao;
+import com.scs.web.blog.dao.UserDao;
 import com.scs.web.blog.domain.vo.ArticleVo;
 import com.scs.web.blog.entity.Article;
+import com.scs.web.blog.entity.User;
 import com.scs.web.blog.factory.DaoFactory;
 import com.scs.web.blog.service.ArticleService;
 import com.scs.web.blog.util.Result;
@@ -23,6 +25,9 @@ import java.util.List;
 public class ArticleServiceImpl implements ArticleService {
     private ArticleDao articleDao = DaoFactory.getArticleDaoInstance();
     private static Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
+    private UserDao userDao = DaoFactory.getUserDaoInstance();
+
+
 
     @Override
     public Result getHotArticles() {
@@ -100,10 +105,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Result deleteArticle(long id) {
+    public Result deleteArticle(long id,long userId) {
         int n = 0;
         try {
             n = articleDao.delete(id);
+            User user = userDao.getUserr(userId);
+            user.setArticles((Integer) (user.getArticles()-1));
+            userDao.updatee(user);
         } catch (SQLException e) {
             logger.error("删除异常");
         }

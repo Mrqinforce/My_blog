@@ -1,6 +1,7 @@
 package com.scs.web.blog.dao;
 
 import com.scs.web.blog.domain.vo.ArticleVo;
+import com.scs.web.blog.entity.Article;
 import com.scs.web.blog.factory.DaoFactory;
 import com.scs.web.blog.util.SpiderUtil;
 import org.junit.Test;
@@ -40,4 +41,6 @@ public class ArticleDaoTest {
         List<ArticleVo> articleVoList = articleDao.selectByPage(1, 10);
         articleVoList.forEach(System.out::println);
     }
+
+
 }
