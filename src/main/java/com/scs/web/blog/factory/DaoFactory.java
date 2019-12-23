@@ -32,5 +32,7 @@ public class DaoFactory {
 
     public static LikeDao getLikeDaoInstance() {return new LikeDaoImpl(); }
 
+    public static UserFollowDao getUserFollowDaoInstance() { return new UserFollowDaoImpl(); }
+
 
 }

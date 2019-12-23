@@ -27,7 +27,7 @@ public class AliOssUtil {
         // 上传文件到指定位置，并使用UUID更名
         ossClient.putObject(bucketName, filePath + newFileName, file);
         // 拼接URL
-        String url = "https://kkkksslls.oss-cn-beijing.aliyuncs.com/" + filePath + newFileName;
+        String url = "https://sillyforce.oss-cn-beijing.aliyuncs.com/" + filePath + newFileName;
         ossClient.shutdown();
         return url;
     }
